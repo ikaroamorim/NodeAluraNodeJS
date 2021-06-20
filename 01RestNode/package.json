@@ -1,0 +1,22 @@
+{
+  "name": "01restnode",
+  "version": "1.0.0",
+  "description": "Curso 01 Rest Node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ikaroamorim/NodeAluraNodeJS.git"
+  },
+  "author": "Ikaro Silva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ikaroamorim/NodeAluraNodeJS/issues"
+  },
+  "homepage": "https://github.com/ikaroamorim/NodeAluraNodeJS#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
