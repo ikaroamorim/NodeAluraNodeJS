@@ -4,6 +4,7 @@
   "description": "Curso 01 Rest Node",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +18,11 @@
   },
   "homepage": "https://github.com/ikaroamorim/NodeAluraNodeJS#readme",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "consign": "^0.1.6",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
