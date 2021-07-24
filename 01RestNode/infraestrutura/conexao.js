@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+
 const conexao = mysql.createConnection({
     host: process.env.HOST,
     port: process.env.PORT ,
