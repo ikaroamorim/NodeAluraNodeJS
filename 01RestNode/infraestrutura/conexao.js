@@ -1,11 +1,14 @@
 const mysql = require('mysql');
+const dotenv = require('dotenv');
 
-const conexao =  mysql.createConnection({
-    host:'localhost',
-    port:3306,
-    user:'adminpetshop',
-    password:'admin',
-    database:'agenda-petshop'
+dotenv.config();
+
+const conexao = mysql.createConnection({
+    host: process.env.HOST,
+    port: process.env.PORT ,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    database: 'agenda-petshop' 
 });
 
 module.exports = conexao;
