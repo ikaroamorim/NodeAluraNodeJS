@@ -1,10 +1,23 @@
 const fs = require('fs');
+const path = require('path');
 
-fs.readFile('./assets/salsicha.jpg', (erro, buffer) =>{
-   console.log('imagem foi bufferizada');
-   console.log(buffer);
+module.exports = (caminho, nomeDoArquivo, callBackImagemCriada) => {
 
-   fs.writeFile('./assets/salsicha2.jpg', buffer, (erro)=>{
-      console.log('imagem foi escrita');
-   })
-});
+   const tiposValidos = ['.jpg', '.png', '.jpeg'];
+
+   const tipo = path.extname(caminho);
+
+   const isTipoValido = tiposValidos.indexOf(tipo) !== -1;
+
+   if (!isTipoValido) {
+      console.log('Tipo invalido!');
+      const erro = "Tipo é inválido";
+      callBackImagemCriada(erro);
+   } else {
+      const novoCaminho = `./assets/images/${nomeDoArquivo}${tipo}`
+
+      fs.createReadStream(caminho)
+         .pipe(fs.createWriteStream(novoCaminho))
+         .on('finish', () => callBackImagemCriada(false, novoCaminho));
+   }
+}
