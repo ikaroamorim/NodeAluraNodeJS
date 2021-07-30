@@ -21,7 +21,7 @@ const opcoes = {
    freezeTableName: 'Fornecedores',
    timestamps: true,
    createdAt: 'dataCriacao',
-   udatedAt: 'dataAtualização',
+   updatedAt: 'dataAtualizacao',
    version: 'versao'
 }
 
