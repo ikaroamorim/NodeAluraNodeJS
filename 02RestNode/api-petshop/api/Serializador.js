@@ -7,9 +7,47 @@ class Serializador {
 
    serializar(dados) {
       if (this.contentType === 'application/json') {
-         return this.json(dados);
+         return this.json(
+            this.filtrar(dados)
+         );
       }
 
       throw new ValorNaoSuportado(this.contentType);
    }
+
+   filtrarObjeto(dados) {
+      const novoObjeto = {};
+
+
+      this.camposPublicos.forEach((campo) => {
+         if (dados.hasOwnProperty(campo)) {
+            novoObjeto[campo] = dados[campo];
+         }
+      });
+
+      return novoObjeto;
+   }
+
+   filtrar(dados) {
+      if (Array.isArray(dados)) {
+         return dados = dados.map(item => this.filtrarObjeto(item));
+      } else {
+         return dados = this.filtrarObjeto(dados);
+      }
+   }
+}
+
+class SerializadorFornecedor extends Serializador {
+   constructor(contentType) {
+      super()
+      this.contentType = contentType
+      this.camposPublicos = ['id', 'empresa', 'categoria']
+
+   }
+}
+
+module.exports = {
+   Serializador: Serializador,
+   SerializadorFornecedor: SerializadorFornecedor,
+   formatosAceitos: ['application/json']
 }
