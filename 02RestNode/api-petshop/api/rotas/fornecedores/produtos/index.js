@@ -1,12 +1,16 @@
 const roteador = require('express').Router({ mergeParams: true });
 const Tabela = require('./TabelaProduto');
 const Produto = require('./Produto');
+const Serializador = require('../../../Serializador').SerializadorProduto;
 
 
 roteador.get('/', async (req, res) => {
    const produtos = await Tabela.listar(req.fornecedor.id);
+   const serializador = new Serializador(
+      res.getHeader('Content-Type')
+   );
    res.send(
-      JSON.stringify(produtos)
+      serializador.serializar(produtos)
    );
 });
 
@@ -17,8 +21,11 @@ roteador.post('/', async (req, res, next) => {
       const dados = Object.assign({}, corpo, { fornecedor: idFornecedor });
       const produto = new Produto(dados);
       await produto.criar();
+      const serializador = new Serializador(
+         res.getHeader('Content-Type')
+      );
       res.status(201);
-      res.send(produto);
+      res.send(serializador.serializar(produto));
    } catch (erro) {
       next(erro);
    }
@@ -36,5 +43,62 @@ roteador.delete('/:id', async (req, res) => {
    res.status(204);
    res.end();
 });
+
+roteador.get('/:idProduto', async (req, res, next) => {
+   try {
+      const dados = {
+         id: req.params.idProduto,
+         fornecedor: req.fornecedor.id
+      };
+
+      const produto = new Produto(dados);
+      await produto.carregar();
+      const serializador = new Serializador(
+         res.getHeader('Content-Type'),
+         ['preco', 'estoque', 'fornecedor', 'dataCriacao', 'dataCriacao', 'dataAtualizacao', 'versao']
+      );
+      res.send(serializador.serializar(produto));
+   } catch (erro) {
+      next(erro);
+   }
+});
+
+roteador.put('/:idProduto', async (req, res, next) => {
+   try {
+      const dados = Object.assign(
+         {},
+         req.body,
+         {
+            id: req.params.idProduto,
+            fornecedor: req.fornecedor.id
+         }
+      );
+      const produto = new Produto(dados);
+      await produto.atualizar();
+      res.status(204);
+      res.end()
+   } catch (error) {
+      next(error);
+   }
+});
+
+roteador.post('/:id/venda', async (req, res, next) => {
+   try {
+      const produto = new Produto({
+         id: req.params.id,
+         fornecedor: req.fornecedor.id
+      });
+
+      await produto.carregar();
+
+      produto.estoque = produto.estoque - req.body.quantidade;
+      await produto.vender();
+
+      res.status(204);
+      res.end();
+   } catch (error) {
+      next(error);
+   }
+})
 
 module.exports = roteador;

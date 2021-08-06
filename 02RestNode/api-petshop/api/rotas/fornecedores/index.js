@@ -83,8 +83,8 @@ const verificarFornecedor = async (req, res, next) => {
       const id = req.params.idFornecedor;
       const fornecedor = new Fornecedor({ id: id });
       await fornecedor.carregar();
-      req.fornecedor = fornecedor
-      next()
+      req.fornecedor = fornecedor;
+      next();
    } catch (erro) {
       next(erro);
    }
