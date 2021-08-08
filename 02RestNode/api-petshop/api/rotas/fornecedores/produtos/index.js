@@ -24,6 +24,10 @@ roteador.post('/', async (req, res, next) => {
       const serializador = new Serializador(
          res.getHeader('Content-Type')
       );
+      res.set('ETag', produto.versao);
+      const timestamp = (new Date(produto.dataAtualizacao)).getTime();
+      res.set('Last-Modified', timestamp);
+      res.set('Location', `/api/fornecedores/${produto.fornecedor}/produtos/${produto.id}`);
       res.status(201);
       res.send(serializador.serializar(produto));
    } catch (erro) {
@@ -57,7 +61,29 @@ roteador.get('/:idProduto', async (req, res, next) => {
          res.getHeader('Content-Type'),
          ['preco', 'estoque', 'fornecedor', 'dataCriacao', 'dataCriacao', 'dataAtualizacao', 'versao']
       );
+      res.set('ETag', produto.versao);
+      const timestamp = (new Date(produto.dataAtualizacao)).getTime();
+      res.set('Last-Modified', timestamp);
       res.send(serializador.serializar(produto));
+   } catch (erro) {
+      next(erro);
+   }
+});
+
+roteador.head('/:idProduto', async (req, res, next) => {
+   try {
+      const dados = {
+         id: req.params.idProduto,
+         fornecedor: req.fornecedor.id
+      };
+      const produto = new Produto(dados);
+      await produto.carregar();
+      
+      res.set('ETag', produto.versao);
+      const timestamp = (new Date(produto.dataAtualizacao)).getTime();
+      res.set('Last-Modified', timestamp);
+      res.status(200);
+      res.end();
    } catch (erro) {
       next(erro);
    }
@@ -75,6 +101,10 @@ roteador.put('/:idProduto', async (req, res, next) => {
       );
       const produto = new Produto(dados);
       await produto.atualizar();
+      await produto.carregar();
+      res.set('ETag', produto.versao);
+      const timestamp = (new Date(produto.dataAtualizacao)).getTime();
+      res.set('Last-Modified', timestamp);
       res.status(204);
       res.end()
    } catch (error) {
@@ -93,7 +123,10 @@ roteador.post('/:id/venda', async (req, res, next) => {
 
       produto.estoque = produto.estoque - req.body.quantidade;
       await produto.vender();
-
+      await produto.carregar();
+      res.set('ETag', produto.versao);
+      const timestamp = (new Date(produto.dataAtualizacao)).getTime();
+      res.set('Last-Modified', timestamp);
       res.status(204);
       res.end();
    } catch (error) {
