@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const config = require('config');
 const roteador = require('./rotas/fornecedores');
+const roteadorV2 = require('./rotas/fornecedores/rotas.v2');
 
 const NaoEncontrado = require('./erros/NaoEncontrado');
 const CampoInvalido = require('./erros/CampoInvalido');
@@ -29,9 +30,16 @@ app.use((req, res, proximo) => {
 
    res.setHeader('Content-Type', formatoRequisitado);
    proximo();
-})
+});
+
+app.use((req, res, next) =>{
+   res.set('Access-Control-Allow-Origin', '*');
+   next();
+});
 
 app.use('/api/fornecedores', roteador);
+
+app.use('/api/v2/fornecedores', roteadorV2);
 
 app.use((erro, req, res, proximo) => {
    let status = 500
@@ -54,7 +62,7 @@ app.use((erro, req, res, proximo) => {
          id: erro.idErro
       })
    )
-})
+});
 
 
 app.listen(config.get('api.porta'), () => {
