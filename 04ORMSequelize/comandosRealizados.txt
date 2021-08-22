@@ -1,0 +1,12 @@
+
+Criação do modelo de Pessoas
+npx sequelize-cli model:create --name Pessoas --attributes nome:string,ativo:boolean,email:string,role:string 
+
+Rodando Primeira Migração
+npx sequelize-cli db:migrate
+
+Criação do Primeiro Seed
+npx sequelize-cli seed:generate --name demo-pessoa
+
+Rodando a execução dos seeds
+npx sequelize-cli db:seed:all

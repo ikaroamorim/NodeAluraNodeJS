@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "ikaromysql@ikarosqldb",
-    "password": "Eviqh8845@*",
+    "username": "root",
+    "password": null,
     "database": "escola_ingles",
-    "host": "ikarosqldb.mysql.database.azure.com",
+    "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
